@@ -1,0 +1,14 @@
+[tool.pdm]
+
+[project]
+name = ""
+version = ""
+description = ""
+authors = [
+    {name = "Rolf Sommer Kaas", email = "rkmo@food.dtu.dk"},
+]
+dependencies = [
+    "tomli==2.*",
+]
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
