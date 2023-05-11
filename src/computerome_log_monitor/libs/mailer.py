@@ -2,9 +2,17 @@ from libs.config import Config
 import subprocess
 
 SUBJECT = "SOFI security incident - Data accessed"
+SUBJECT_TEST = "SOFI security incident - Test"
+MESSAGE_TEST = (
+    "Dear auditor,\n"
+    "\n"
+    "This email was send to make sure the email service is working as "
+    "expected.\n"
+    "No furhter action is needed.\n"
+)
 
 
-def send_mail_to_auditors(conf: Config, unaouth: dict):
+def send_mail_to_auditors(conf: Config, unaouth: dict) -> None:
     message = create_unaouth_message(conf, unaouth)
     emails = " ".join(conf.auditor_emails)
     cmd = f"echo '{message}' | mail -s '{SUBJECT}' {emails}"
@@ -39,3 +47,9 @@ def create_unaouth_message(conf: Config, unaouth: dict) -> str:
         message += "\n--------------------------------------------------\n"
 
     return message
+
+
+def send_test_mail(conf: Config) -> None:
+    emails = " ".join(conf.auditor_emails)
+    cmd = f"echo '{MESSAGE_TEST}' | mail -s '{SUBJECT_TEST}' {emails}"
+    subprocess.run(cmd, shell=True, check=True)
