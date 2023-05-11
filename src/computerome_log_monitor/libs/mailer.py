@@ -5,16 +5,18 @@ SUBJECT = "SOFI security incident - Data accessed"
 
 
 def send_mail_to_auditors(conf: Config, unaouth: dict):
-    cmd = ["echo", create_unaouth_message(conf, unaouth), "|", "mail", "-s", SUBJECT]
-    for auditor in conf.auditor_emails:
-        try:
-            subprocess.call(cmd.append(auditor), check=True)
-        except subprocess.SubprocessError:
-            unsent_filepath = (
-                f"{conf.report_dir}/unsent_security_incident_{conf.report_date}"
-            )
-            with open(unsent_filepath, "w") as fh:
-                fh.write(create_unaouth_message(conf, unaouth))
+    message = create_unaouth_message(conf, unaouth)
+    emails = " ".join(conf.auditor_emails)
+    cmd = f"echo '{message}' | mail -s '{SUBJECT}' {emails}"
+
+    try:
+        subprocess.run(cmd, shell=True, check=True)
+    except subprocess.SubprocessError:
+        unsent_filepath = (
+            f"{conf.report_dir}/unsent_security_incident_{conf.report_date}"
+        )
+        with open(unsent_filepath, "w") as fh:
+            fh.write(create_unaouth_message(conf, unaouth))
 
 
 def create_unaouth_message(conf: Config, unaouth: dict) -> str:

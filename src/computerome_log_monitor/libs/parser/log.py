@@ -6,23 +6,26 @@ import re
 class Log:
     def __init__(self, log_path: str) -> None:
         self.entries = {}
-        with open(log_path, "r") as fh:
-            for line in fh:
-                line = line.rstrip()
-                if not line:
-                    continue
-                columns = line.split("|")
-                uid = columns[1]
-                action = columns[6]
-                target_type = columns[9]
-                success = columns[7]
-                target = columns[-1]
+        try:
+            with open(log_path, "r") as fh:
+                for line in fh:
+                    line = line.rstrip()
+                    if not line:
+                        continue
+                    columns = line.split("|")
+                    uid = columns[1]
+                    action = columns[6]
+                    target_type = columns[9]
+                    success = columns[7]
+                    target = columns[-1]
 
-                entry = self.entries.get(uid, {})
-                entry_target = entry.get(target, [])
-                entry_target.append((action, target_type, success))
-                entry[target] = entry_target
-                self.entries[uid] = entry
+                    entry = self.entries.get(uid, {})
+                    entry_target = entry.get(target, [])
+                    entry_target.append((action, target_type, success))
+                    entry[target] = entry_target
+                    self.entries[uid] = entry
+        except FileNotFoundError:
+            print("Log not found!")
 
     def collect_unauthorized_entries(self, conf: Config) -> dict:
         unauthorized_entries = {}
@@ -42,7 +45,6 @@ class Log:
 
     @staticmethod
     def get_username(uid: str) -> str:
-        uid = "503"
         # uid=25639(rkmo) gid=25639(rkmo) groups=1039(cge),113801242(course_23262),113800178(fvst_admins),113800161(fvst_ssi_dtu),25639(rkmo)
         try:
             id_process = subprocess.run(["id", uid], capture_output=True, check=True)

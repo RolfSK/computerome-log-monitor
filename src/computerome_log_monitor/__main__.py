@@ -7,6 +7,7 @@ from __init__ import __version__
 from libs.config import Config
 from libs.monitor import get_daily_log
 from libs.mailer import create_unaouth_message
+from libs.mailer import send_mail_to_auditors
 
 
 CONF_FILENAME = "conf.toml"
@@ -30,7 +31,6 @@ def main():
         "-d",
         "--date",
         help=(
-            "Not yet implemented! TODO."
             "Get a full access report from a specific date. Specify date in "
             "the format YYYY-MM-DD"
         ),
@@ -62,7 +62,7 @@ def main():
     unauthorized_access = log.collect_unauthorized_entries(conf)
 
     if unauthorized_access:
-        print(create_unaouth_message(conf, unauthorized_access))
+        send_mail_to_auditors(conf, unauthorized_access)
 
 
 if __name__ == "__main__":
