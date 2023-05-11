@@ -8,7 +8,7 @@ from libs.config import Config
 from libs.monitor import get_daily_log
 from libs.mailer import create_unaouth_message
 from libs.mailer import send_mail_to_auditors
-from libs.mailer import send_mail_test
+from libs.mailer import send_test_mail
 
 
 CONF_FILENAME = "conf.toml"
@@ -67,7 +67,7 @@ def main():
 
     # Send a test mail each 1st of every month
     if datetime.datetime.now().day == 1:
-        send_mail_test(conf)
+        send_test_mail(conf)
 
 
 if __name__ == "__main__":
