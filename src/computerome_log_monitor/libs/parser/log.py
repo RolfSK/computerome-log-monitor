@@ -6,6 +6,7 @@ import re
 class Log:
     def __init__(self, log_path: str) -> None:
         self.entries = {}
+        self.log_path = log_path
         try:
             with open(log_path, "r") as fh:
                 for line in fh:
@@ -25,7 +26,7 @@ class Log:
                     entry[target] = entry_target
                     self.entries[uid] = entry
         except FileNotFoundError:
-            print("Log not found!")
+            print("! Log not found!")
 
     def collect_unauthorized_entries(self, conf: Config) -> dict:
         unauthorized_entries = {}
@@ -45,9 +46,9 @@ class Log:
 
     @staticmethod
     def get_username(uid: str) -> str:
-        # uid=25639(rkmo) gid=25639(rkmo) groups=1039(cge),113801242(course_23262),113800178(fvst_admins),113800161(fvst_ssi_dtu),25639(rkmo)
         try:
-            id_process = subprocess.run(["id", uid], capture_output=True, check=True)
+            id_process = subprocess.run(
+                ["id", uid], capture_output=True, check=True)
             id_name_str = id_process.stdout.decode("utf-8").split(" ")[0]
             name_match = re.match(r"uid=\d+\((.+)\)", id_name_str)
             if name_match:

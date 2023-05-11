@@ -1,7 +1,11 @@
 from libs.config import Config
+from libs.parser.log import Log
 import subprocess
 
 SUBJECT = "SOFI security incident - Data accessed"
+
+SUBJECT_MISSING = "SOFI security incident - Missing logs"
+
 SUBJECT_TEST = "SOFI security incident - Test"
 MESSAGE_TEST = (
     "Dear auditor,\n"
@@ -47,6 +51,28 @@ def create_unaouth_message(conf: Config, unaouth: dict) -> str:
         message += "\n--------------------------------------------------\n"
 
     return message
+
+
+def send_missing_log_mail(conf: Config, log: Log) -> None:
+    emails = " ".join(conf.auditor_emails)
+    message = (
+        "Dear auditor,\n"
+        "\n"
+        "A log file is missing.\n"
+        f"It was expected to be found at: {log.log_path}\n"
+        "\n"
+        "Possible issues:\n"
+        "\t* Computerome no longer creates new logs. Contact Computerome.\n"
+        "\t* Location of log directory has changed. Change the 'log_dir' "
+        f"\t  setting in the configuration file: \n\t  {conf.conf_path}\n"
+        "\t  to the new log directory."
+        "\n"
+        "IMPORTANT: Remember to check the missing log file, when it has been "
+        "found, either manually or by running 'computerome_log_monitor' with "
+        "the date option."
+    )
+    cmd = f"echo '{message}' | mail -s '{SUBJECT_MISSING}' {emails}"
+    subprocess.run(cmd, shell=True, check=True)
 
 
 def send_test_mail(conf: Config) -> None:

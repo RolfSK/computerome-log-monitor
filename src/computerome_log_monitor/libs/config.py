@@ -14,5 +14,6 @@ class Config:
         self.log_file_prefix = conf_toml_dict["log_file_prefix"]
         self.check_after = conf_toml_dict["check_after"]
         self.check_before = conf_toml_dict["check_before"]
+        self.conf_path = args.config
 
         self.report_date = args.date
