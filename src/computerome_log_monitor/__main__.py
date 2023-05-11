@@ -9,6 +9,7 @@ from libs.monitor import get_daily_log
 from libs.mailer import create_unaouth_message
 from libs.mailer import send_mail_to_auditors
 from libs.mailer import send_test_mail
+from libs.mailer import send_missing_log_mail
 
 
 CONF_FILENAME = "conf.toml"
