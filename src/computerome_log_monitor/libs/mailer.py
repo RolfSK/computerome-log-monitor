@@ -71,7 +71,7 @@ def send_missing_log_mail(conf: Config, log: Log) -> None:
         "found, either manually or by running 'computerome_log_monitor' with "
         "the date option."
     )
-    cmd = f"echo '{message}' | mail -s '{SUBJECT_MISSING}' {emails}"
+    cmd = f"echo '{message}' | mail -v -s '{SUBJECT_MISSING}' -r rkmo {emails}"
     subprocess.run(cmd, shell=True, check=True)
 
 
