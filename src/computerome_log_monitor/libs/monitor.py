@@ -5,7 +5,7 @@ from libs.config import Config
 
 def get_daily_log(conf: Config) -> Log:
     if conf.report_date is None:
-        day = datetime.datetime.date(datetime.datetime.now())
+        day = (datetime.datetime.now() - datetime.timedelta(days=1)).date()
         conf.report_date = day
     else:
         day = conf.report_date
