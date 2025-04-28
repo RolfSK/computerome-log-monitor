@@ -61,12 +61,13 @@ def main():
         return
 
     log = get_daily_log(conf)
-    if log.entries:
+    if log.missing:
+        send_missing_log_mail(conf, log)
+    elif log.entries:
         unauthorized_access = log.collect_unauthorized_entries(conf)
         if unauthorized_access:
             send_mail_to_auditors(conf, unauthorized_access)
-    else:
-        send_missing_log_mail(conf, log)
+
 
     # Send a test mail each 1st of every month
     if datetime.datetime.now().day == 1:

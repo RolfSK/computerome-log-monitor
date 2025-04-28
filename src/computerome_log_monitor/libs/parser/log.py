@@ -7,6 +7,7 @@ class Log:
     def __init__(self, log_path: str) -> None:
         self.entries = {}
         self.log_path = log_path
+        self.missing = False
         try:
             with open(log_path, "r") as fh:
                 for line in fh:
@@ -27,6 +28,7 @@ class Log:
                     self.entries[uid] = entry
         except FileNotFoundError:
             print("! Log not found!")
+            self.missing = True
 
     def collect_unauthorized_entries(self, conf: Config) -> dict:
         unauthorized_entries = {}
